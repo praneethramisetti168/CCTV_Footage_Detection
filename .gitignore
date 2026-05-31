@@ -1,0 +1,45 @@
+# Python environment
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Database
+*.db
+*.sqlite3
+*.sqlite
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp files
+*.tmp
+*.bak
+
+# Environment
+.env
+.env.local
+
+# Large binary/media files (optional — adjust as needed)
+# .pt files are model weights, keep in repo for submission
+# CCTV clips are needed for pipeline, keep in repo

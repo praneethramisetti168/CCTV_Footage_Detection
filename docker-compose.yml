@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: store_intelligence_api
+    ports:
+      - "8000:8000"
+    volumes:
+      # SQLite persistence
+      - ./data:/data
+      # CCTV clips (read-only) — pipeline script reads from here
+      - "./CCTV Footage-20260529T160731Z-3-00144614ea (1)/CCTV Footage:/clips:ro"
+      # Events output from detection pipeline
+      - ./events_output:/events_output
+    environment:
+      - VIDEO_SOURCE=demo
+      - DATABASE_URL=sqlite:////data/store_intelligence.db
+      - STORE_ID=STORE_BLR_001
+      - CLIPS_DIR=/clips
+      - EVENTS_OUTPUT_DIR=/events_output
+      - POS_CSV_PATH=/app/pos_transactions.csv
+      - STORE_LAYOUT_JSON=/app/store_layout.json
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped

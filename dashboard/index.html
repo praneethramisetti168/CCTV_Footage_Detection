@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Store Intelligence System — Live Dashboard</title>
+  <meta name="description" content="Real-time CCTV store analytics: footfall, zone heatmap, anomaly detection, live event stream — Purplle Tech Challenge 2026" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+  <!-- ─── Navbar ──────────────────────────────────────────────── -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-left">
+      <div class="nav-logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 10l4.553-2.069A1 1 0 0121 8.82V5a1 1 0 00-1-1H4a1 1 0 00-1 1v3.82a1 1 0 00.447.869L8 12"/>
+            <rect x="3" y="14" width="18" height="8" rx="2"/>
+            <circle cx="12" cy="18" r="1.5"/>
+          </svg>
+        </div>
+        <div>
+          <span class="nav-title">Store Intelligence</span>
+          <span class="nav-subtitle">Purplle Tech Challenge 2026</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav-center">
+      <div class="nav-status" id="nav-status">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="status-label">Connecting…</span>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="nav-time" id="nav-time">--:--:--</div>
+      <div class="nav-cam" id="nav-cam">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+          <path d="M15 10l4.553-2.069A1 1 0 0121 8.82V15.18a1 1 0 01-.447.868L15 13"/>
+          <rect x="1" y="7" width="15" height="10" rx="2"/>
+        </svg>
+        <span id="cam-fps">0 fps</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── Main Layout ─────────────────────────────────────────── -->
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <nav class="sidebar-nav">
+        <button class="sidebar-btn active" data-view="overview" id="btn-overview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Overview</span>
+        </button>
+        <button class="sidebar-btn" data-view="heatmap" id="btn-heatmap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Zone Map</span>
+        </button>
+        <button class="sidebar-btn" data-view="events" id="btn-events">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>Events</span>
+          <span class="badge" id="events-badge">0</span>
+        </button>
+        <button class="sidebar-btn" data-view="anomalies" id="btn-anomalies">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span>Anomalies</span>
+          <span class="badge danger" id="anomalies-badge">0</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-live">
+        <div class="live-metric">
+          <span class="live-label">Active Now</span>
+          <span class="live-value" id="sb-active">0</span>
+        </div>
+        <div class="live-metric">
+          <span class="live-label">Total Today</span>
+          <span class="live-value accent" id="sb-total">0</span>
+        </div>
+        <div class="live-metric">
+          <span class="live-label">Anomalies</span>
+          <span class="live-value danger" id="sb-anomalies">0</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <main class="main-content">
+
+      <!-- ══ Overview View ══════════════════════════════════════ -->
+      <section class="view active" id="view-overview">
+
+        <!-- Stat Cards -->
+        <div class="stat-grid">
+          <div class="stat-card glow-blue" id="card-active">
+            <div class="stat-icon blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <div class="stat-body">
+              <div class="stat-label">Active in Store</div>
+              <div class="stat-value" id="active-persons">0</div>
+              <div class="stat-sub">people right now</div>
+            </div>
+            <div class="stat-spark" id="spark-active"></div>
+          </div>
+
+          <div class="stat-card glow-purple" id="card-total">
+            <div class="stat-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div class="stat-body">
+              <div class="stat-label">Total Footfall</div>
+              <div class="stat-value" id="total-persons">0</div>
+              <div class="stat-sub">visitors today</div>
+            </div>
+          </div>
+
+          <div class="stat-card glow-green" id="card-fps">
+            <div class="stat-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="stat-body">
+              <div class="stat-label">Processing FPS</div>
+              <div class="stat-value" id="pipeline-fps">0</div>
+              <div class="stat-sub" id="camera-status">pipeline active</div>
+            </div>
+          </div>
+
+          <div class="stat-card glow-red" id="card-anomalies">
+            <div class="stat-icon red">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div class="stat-body">
+              <div class="stat-label">Active Anomalies</div>
+              <div class="stat-value" id="anomaly-count">0</div>
+              <div class="stat-sub">unresolved alerts</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts-row">
+          <!-- Footfall Chart -->
+          <div class="chart-card" id="footfall-chart-card">
+            <div class="card-header">
+              <div class="card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                Live Footfall Trend
+              </div>
+              <div class="card-badge live-pill">● LIVE</div>
+            </div>
+            <div class="chart-container">
+              <canvas id="footfall-chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Zone Occupancy Mini Chart -->
+          <div class="chart-card" id="zone-bar-card">
+            <div class="card-header">
+              <div class="card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                Zone Occupancy
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="zone-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Row: Live Events + Recent Anomalies -->
+        <div class="bottom-row">
+          <div class="feed-card" id="events-feed-card">
+            <div class="card-header">
+              <div class="card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Live Event Stream
+              </div>
+              <div class="card-badge live-pill">● LIVE</div>
+            </div>
+            <div class="event-feed" id="event-feed-list"></div>
+          </div>
+
+          <div class="feed-card" id="alerts-card">
+            <div class="card-header">
+              <div class="card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                Anomaly Alerts
+              </div>
+              <span class="unresolved-count" id="unresolved-badge">0 active</span>
+            </div>
+            <div class="anomaly-feed" id="anomaly-feed-list">
+              <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <p>No anomalies detected</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ Zone Heatmap View ══════════════════════════════════ -->
+      <section class="view" id="view-heatmap">
+        <div class="heatmap-wrapper">
+          <div class="card-header" style="padding:0 0 16px 0">
+            <div class="card-title" style="font-size:1.1rem">Store Floor Heatmap</div>
+            <div class="card-badge live-pill">● LIVE</div>
+          </div>
+          <div class="heatmap-layout">
+            <div class="store-map" id="store-map">
+              <!-- Zones rendered by JS -->
+            </div>
+            <div class="zone-legend" id="zone-legend">
+              <!-- Legend rendered by JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ Events Log View ════════════════════════════════════ -->
+      <section class="view" id="view-events">
+        <div class="log-card">
+          <div class="card-header">
+            <div class="card-title">Full Event Log</div>
+            <div class="log-controls">
+              <select id="filter-event-type" class="filter-select">
+                <option value="">All Types</option>
+                <option value="PERSON_ENTERED">PERSON_ENTERED</option>
+                <option value="PERSON_EXITED">PERSON_EXITED</option>
+                <option value="ZONE_ENTERED">ZONE_ENTERED</option>
+                <option value="ZONE_EXITED">ZONE_EXITED</option>
+              </select>
+              <button class="btn-clear" onclick="clearEventLog()">Clear</button>
+            </div>
+          </div>
+          <div class="log-table-wrap">
+            <table class="log-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Type</th>
+                  <th>Person ID</th>
+                  <th>Zone</th>
+                  <th>Metadata</th>
+                </tr>
+              </thead>
+              <tbody id="log-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ Anomalies View ══════════════════════════════════════ -->
+      <section class="view" id="view-anomalies">
+        <div class="log-card">
+          <div class="card-header">
+            <div class="card-title">Anomaly Dashboard</div>
+            <div class="log-controls">
+              <select id="filter-severity" class="filter-select">
+                <option value="">All Severities</option>
+                <option value="CRITICAL">CRITICAL</option>
+                <option value="HIGH">HIGH</option>
+                <option value="MEDIUM">MEDIUM</option>
+                <option value="LOW">LOW</option>
+              </select>
+            </div>
+          </div>
+          <!-- Anomaly stats mini-cards -->
+          <div class="anomaly-stats" id="anomaly-stats-row">
+            <div class="astat critical"><span id="cnt-critical">0</span><label>Critical</label></div>
+            <div class="astat high"><span id="cnt-high">0</span><label>High</label></div>
+            <div class="astat medium"><span id="cnt-medium">0</span><label>Medium</label></div>
+            <div class="astat low"><span id="cnt-low">0</span><label>Low</label></div>
+          </div>
+          <div class="anomaly-cards-list" id="anomaly-cards-list">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <p>All clear — no anomalies yet</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toast-container"></div>
+
+  <script src="/assets/js/dashboard.js"></script>
+</body>
+</html>

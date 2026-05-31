@@ -1,0 +1,109 @@
+{
+  "store_id": "STORE_BLR_001",
+  "store_name": "Brigade_Bangalore",
+  "city": "Bangalore",
+  "address": "Brigade Road, Bangalore",
+  "open_hours": {
+    "open": "11:00",
+    "close": "22:00"
+  },
+  "cameras": [
+    {
+      "camera_id": "CAM_ENTRY_01",
+      "role": "entry",
+      "clip": "CAM 3.mp4",
+      "description": "Entry/exit glass door threshold"
+    },
+    {
+      "camera_id": "CAM_FLOOR_01",
+      "role": "floor",
+      "clip": "CAM 1.mp4",
+      "description": "Main floor - skincare/makeup shelves"
+    },
+    {
+      "camera_id": "CAM_FLOOR_02",
+      "role": "floor",
+      "clip": "CAM 2.mp4",
+      "description": "Wider floor angle - multiple aisles"
+    },
+    {
+      "camera_id": "CAM_STORAGE_01",
+      "role": "storage",
+      "clip": "CAM 4.mp4",
+      "description": "Back room / restricted staff area"
+    },
+    {
+      "camera_id": "CAM_BILLING_01",
+      "role": "billing",
+      "clip": "CAM 5.mp4",
+      "description": "Billing counter / POS station"
+    }
+  ],
+  "zones": [
+    {
+      "zone_id": "ENTRY_EXIT",
+      "name": "Entry/Exit",
+      "camera_ids": [
+        "CAM_ENTRY_01"
+      ],
+      "type": "threshold",
+      "restricted": false
+    },
+    {
+      "zone_id": "SKINCARE",
+      "name": "Skincare",
+      "camera_ids": [
+        "CAM_FLOOR_01",
+        "CAM_FLOOR_02"
+      ],
+      "type": "product",
+      "restricted": false
+    },
+    {
+      "zone_id": "MAKEUP",
+      "name": "Makeup",
+      "camera_ids": [
+        "CAM_FLOOR_01",
+        "CAM_FLOOR_02"
+      ],
+      "type": "product",
+      "restricted": false
+    },
+    {
+      "zone_id": "HAIRCARE",
+      "name": "Haircare",
+      "camera_ids": [
+        "CAM_FLOOR_02"
+      ],
+      "type": "product",
+      "restricted": false
+    },
+    {
+      "zone_id": "FRAGRANCE",
+      "name": "Fragrance",
+      "camera_ids": [
+        "CAM_FLOOR_01"
+      ],
+      "type": "product",
+      "restricted": false
+    },
+    {
+      "zone_id": "STORAGE",
+      "name": "Storage (Restricted)",
+      "camera_ids": [
+        "CAM_STORAGE_01"
+      ],
+      "type": "restricted",
+      "restricted": true
+    },
+    {
+      "zone_id": "BILLING",
+      "name": "Billing Counter",
+      "camera_ids": [
+        "CAM_BILLING_01"
+      ],
+      "type": "billing",
+      "restricted": false
+    }
+  ]
+}
