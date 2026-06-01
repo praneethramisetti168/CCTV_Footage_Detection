@@ -24,6 +24,7 @@ htmlcov/
 *.db
 *.sqlite3
 *.sqlite
+*.db-journal
 
 # Logs
 *.log
@@ -43,3 +44,5 @@ Thumbs.db
 # Large binary/media files (optional — adjust as needed)
 # .pt files are model weights, keep in repo for submission
 # CCTV clips are needed for pipeline, keep in repo
+*.db-journal
+*.mp4
