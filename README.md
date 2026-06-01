@@ -1,6 +1,141 @@
 # CCTV_Footage_Detection
 
-A compact, practical store-intelligence repository that detects people, events, and anomalies from CCTV video streams and correlates them with POS data. This project includes a detection/tracking pipeline, analytics, a WebSocket API, and example dashboards for demonstration and evaluation.
+Complete, practical store-intelligence project for detecting people, events, and anomalies from CCTV streams and correlating those events with POS data. Intended as a demonstration/benchmark solution: it contains a detection+tracking pipeline, analytics, a WebSocket API, and a simple dashboard for visualization.
+
+---
+
+## Contents (short)
+
+- `backend/` — API, database helpers, analytics, and model files.
+- `pipeline/` — detector, tracker, emitter, and video-processing utilities.
+- `dashboard/` — static frontend to visualize events (HTML/JS/CSS).
+- `sample_data/` — small thumbnails and a demo video generator script.
+- `events_output/` — example JSONL event logs.
+- `yolov8n.pt` — small YOLOv8 weights used for demos.
+
+---
+
+## Requirements
+
+- Python 3.10+ (Windows or Unix)
+- Git
+- Optional: Docker & Docker Compose for containerized runs
+
+If you plan to run detection locally you will need `torch`/`ultralytics` installed — see `backend/requirements.txt` for the exact Python packages.
+
+---
+
+## Setup (local, Windows and Unix)
+
+Windows (PowerShell):
+
+```powershell
+python -m venv venv
+venv\Scripts\Activate.ps1
+pip install -r backend/requirements.txt
+```
+
+Unix/macOS (bash):
+
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r backend/requirements.txt
+```
+
+---
+
+## Quick Start — Run everything (recommended flows)
+
+1) Run backend API (development):
+
+```bash
+cd backend
+python main.py
+# By default the API listens on http://127.0.0.1:8000 (check console output)
+```
+
+2) Run the pipeline against the demo clip or your own video:
+
+```bash
+# Generate a short demo video (optional)
+python sample_data/generate_demo_video.py
+
+# Run detection pipeline (example)
+python pipeline/detect.py
+```
+
+3) Dashboard: open `dashboard/index.html` in the browser or serve it with a static server. Example using Python HTTP server (recommended when using API/WebSocket locally):
+
+```bash
+cd dashboard
+python -m http.server 8000
+# Open http://127.0.0.1:8000 in your browser
+```
+
+4) Convenience start script (Windows):
+
+```powershell
+.\start.bat    # runs pipeline + backend in the configured way (Windows)
+```
+
+If you are on Unix and a `start.sh` is available, use `./start.sh` instead.
+
+---
+
+## Docker / Docker Compose
+
+To run the project in Docker (if you prefer containerization):
+
+```bash
+docker-compose up --build
+```
+
+This uses the `Dockerfile` and `docker-compose.yml` in the repo root. Adjust volumes for large video files outside the repo.
+
+---
+
+## Dashboard details
+
+- The dashboard is a static frontend in `dashboard/` that connects to the local backend WebSocket to receive live events. If you serve the dashboard via `python -m http.server` or another static server, point the dashboard configuration (if needed) to the backend API/WebSocket URL.
+- To view saved example events, load files from `events_output/` using the dashboard's sample loader (if provided).
+
+---
+
+## Data & model notes
+
+- `yolov8n.pt` is included for demo purposes only (small weights). For production use, replace with a more suitable model and keep weights out of the repo if they are large.
+- Full CCTV raw clips were removed from the public history to keep the repo small — store video data externally and update local config paths.
+
+---
+
+## Tests
+
+Run unit tests with pytest from repo root:
+
+```bash
+pytest -q
+```
+
+There are tests under `tests/` covering pipeline and analytics components.
+
+---
+
+## Troubleshooting & tips
+
+- If `python main.py` fails due to missing packages, ensure the virtual environment is activated and `pip install -r backend/requirements.txt` completed successfully.
+- If the dashboard cannot connect to WebSocket, check the backend console for the WebSocket bind address and ensure CORS / firewall rules allow it.
+- Large files: add them to an external storage location and update local config paths; do not commit large video files to the repository.
+
+---
+
+## Contributing
+
+Fork, add feature branches, and open pull requests. Add tests for non-trivial changes and keep public secrets out of the repo.
+
+---
+
+If you want, I can further tailor the `start.bat` content and add an explicit `start.sh` equivalent for Unix. Tell me which commands you prefer to run with `start.bat` and I will document them verbatim.
 
 ## Key Components
 
