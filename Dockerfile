@@ -35,4 +35,4 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
     CMD python -c "import os, urllib.request; port=int(os.environ.get('PORT', '8000')); urllib.request.urlopen(f'http://localhost:{port}/health')" || exit 1
 
-CMD ["sh", "-lc", "uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1"]
+CMD python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000
