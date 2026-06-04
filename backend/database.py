@@ -1,7 +1,7 @@
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
-from config import settings
+from backend.config import settings
 
 # Allow DATABASE_URL env var to override settings (useful for tests)
 _db_url = os.environ.get("DATABASE_URL", settings.database_url)
@@ -31,9 +31,9 @@ def get_db():
 def init_db():
     """Create all tables on startup."""
     # Import models so Base knows about them
-    import models.event  # noqa: F401
-    import models.person  # noqa: F401
-    import models.anomaly  # noqa: F401
-    import models.pos_transaction  # noqa: F401
+    import backend.models.event  # noqa: F401
+    import backend.models.person  # noqa: F401
+    import backend.models.anomaly  # noqa: F401
+    import backend.models.pos_transaction  # noqa: F401
     Base.metadata.create_all(bind=engine)
 

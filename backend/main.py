@@ -30,12 +30,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from analytics.aggregator import aggregator
-from analytics.anomaly_detector import anomaly_detector
-from analytics.pos_correlator import pos_correlator
-from api.routes import analytics, anomalies, events, persons, zones
-from api.routes.store import router as store_router
-from api.websocket import ws_manager
+from backend.analytics.aggregator import aggregator
+from backend.analytics.anomaly_detector import anomaly_detector
+from backend.analytics.pos_correlator import pos_correlator
+from backend.api.routes import analytics, anomalies, events, persons, zones
+from backend.api.routes.store import router as store_router
+from backend.api.websocket import ws_manager
 from backend.config import settings
 from backend.database import SessionLocal, init_db
 from backend.models.anomaly import Anomaly as AnomalyModel

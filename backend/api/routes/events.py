@@ -6,8 +6,8 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
-from database import get_db
-from models.event import Event
+from backend.database import get_db
+from backend.models.event import Event
 
 router = APIRouter(prefix="/api/v1/events", tags=["Events"])
 

@@ -4,8 +4,8 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
-from database import get_db
-from models.person import PersonTrack
+from backend.database import get_db
+from backend.models.person import PersonTrack
 
 router = APIRouter(prefix="/api/v1/persons", tags=["Persons"])
 

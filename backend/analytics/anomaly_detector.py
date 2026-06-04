@@ -18,8 +18,8 @@ from typing import Dict, List, Optional
 
 import numpy as np
 
-from config import settings
-from streaming.schemas import AnomalyEvent, AnomalyType, Severity
+from backend.config import settings
+from backend.streaming.schemas import AnomalyEvent, AnomalyType, Severity
 
 logger = logging.getLogger(__name__)
 

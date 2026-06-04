@@ -6,8 +6,8 @@ from typing import List, Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from pipeline.video_processor import video_processor
-from pipeline.zone_manager import Zone
+from backend.pipeline.video_processor import video_processor
+from backend.pipeline.zone_manager import Zone
 
 router = APIRouter(prefix="/api/v1/zones", tags=["Zones"])
 

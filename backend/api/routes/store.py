@@ -23,13 +23,13 @@ from sqlalchemy import func, text
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session
 
-from analytics.aggregator import aggregator
-from analytics.pos_correlator import pos_correlator
-from config import settings
-from database import get_db, SessionLocal
-from models.anomaly import Anomaly
-from models.event import Event
-from streaming.schemas import ChallengeEvent
+from backend.analytics.aggregator import aggregator
+from backend.analytics.pos_correlator import pos_correlator
+from backend.config import settings
+from backend.database import get_db, SessionLocal
+from backend.models.anomaly import Anomaly
+from backend.models.event import Event
+from backend.streaming.schemas import ChallengeEvent
 
 logger = logging.getLogger(__name__)
 

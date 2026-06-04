@@ -8,8 +8,8 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from analytics.aggregator import aggregator
-from database import get_db
+from backend.analytics.aggregator import aggregator
+from backend.database import get_db
 
 router = APIRouter(prefix="/api/v1/analytics", tags=["Analytics"])
 
