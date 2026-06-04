@@ -416,7 +416,6 @@ async def get_cameras():
         ]
     }
 
-
 @app.websocket("/ws/live-events")
 async def websocket_endpoint(websocket: WebSocket):
     await ws_manager.connect(websocket)
