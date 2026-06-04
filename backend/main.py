@@ -36,14 +36,14 @@ from analytics.pos_correlator import pos_correlator
 from api.routes import analytics, anomalies, events, persons, zones
 from api.routes.store import router as store_router
 from api.websocket import ws_manager
-from config import settings
-from database import SessionLocal, init_db
-from models.anomaly import Anomaly as AnomalyModel
-from models.event import Event as EventModel
-from models.person import PersonTrack
-from pipeline.video_processor import video_processor
-from streaming.event_bus import event_bus
-from streaming.schemas import AnomalyEvent, EventType, StoreEvent
+from backend.config import settings
+from backend.database import SessionLocal, init_db
+from backend.models.anomaly import Anomaly as AnomalyModel
+from backend.models.event import Event as EventModel
+from backend.models.person import PersonTrack
+from backend.pipeline.video_processor import video_processor
+from backend.streaming.event_bus import event_bus
+from backend.streaming.schemas import AnomalyEvent, EventType, StoreEvent
 
 logging.basicConfig(
     level=logging.INFO,

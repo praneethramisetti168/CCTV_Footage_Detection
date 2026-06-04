@@ -22,11 +22,11 @@ from typing import Any, Dict, Optional, Set
 import cv2
 import numpy as np
 
-from config import settings
-from pipeline.detector import Detector
-from pipeline.zone_manager import ZoneManager
-from streaming.event_bus import event_bus
-from streaming.schemas import BoundingBox, EventType, StoreEvent
+from backend.config import settings
+from backend.pipeline.detector import Detector
+from backend.pipeline.zone_manager import ZoneManager
+from backend.streaming.event_bus import event_bus
+from backend.streaming.schemas import BoundingBox, EventType, StoreEvent
 
 logger = logging.getLogger(__name__)
 
